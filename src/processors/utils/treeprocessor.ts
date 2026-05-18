@@ -223,8 +223,13 @@ class TreeProcessor {
             this.citations.push(bib_key);
           }
           if (bib_key in this.biblio) {
-            // TODO: implement ruby citation_text
-            v = `[${this.citations.indexOf(bib_key) + 1}]`;
+            const cite = new Cite().set(this.biblio[bib_key]);
+            cite.options({ style: "csl" });
+            const formatted = cite.format("citation", {
+              template: this.style,
+              lang: this.locale
+            });
+            v = formatted || `[${this.citations.indexOf(bib_key) + 1}]`;
           } else {
             const error_message = `Unknown bibliography reference: ${bib_key}`;
             if (this.throw_on_unknown) {
